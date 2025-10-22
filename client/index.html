@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Basic HTML Server Request</title>
+</head>
+<body>
+    <h1>Server Request Example</h1>
+    <button id="fetchBtn">Fetch Data</button>
+    <pre id="result"></pre>
+
+    <script>
+        document.getElementById('fetchBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('http://localhost:5000');
+                const data = await response.text();
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('result').textContent = 'Error: ' + error;
+            }
+        });
+    </script>
+</body>
+</html>
