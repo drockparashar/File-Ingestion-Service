@@ -1,13 +1,15 @@
-import http from "http";
+import express from "express";
+import cors from "cors";
+import uploadRouter from "./routes/uploadRoutes.js";
+const app=express();
 
-const server=http.createServer((req,res)=>{
-    const headers={ 'Content-Type': 'text/plain' ,
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'OPTIONS, POST, GET'}
-    res.writeHead(200,headers);
+app.use(express.json());
+app.use(cors({origin:["http://127.0.0.1:5500"]}));
 
-    res.end("Hello world");
-});
+app.get("/",(req,res)=>{
+    return res.status(200).json({message:"API is running ...."})    
+})
 
+app.use("/upload",uploadRouter);
 
-server.listen(5000,()=>console.log("Server running on PORT: 5000"));
+app.listen(5000, ()=>console.log("App is running on prot: 50000"))
