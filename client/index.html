@@ -9,16 +9,39 @@
     <button id="fetchBtn">Fetch Data</button>
     <pre id="result"></pre>
 
+    <form id="uploadForm" method="POST" action="http://localhost:5000/upload" enctype="multipart/form-data">
+        <input id="inputFile" type="file" name="file">
+        <button type="submit">Upload</button>
+    </form>
+    <pre id="uploadResult"></pre>
+
     <script>
+        const URI="http://localhost:5000"
         document.getElementById('fetchBtn').addEventListener('click', async () => {
             try {
-                const response = await fetch('http://localhost:5000');
-                const data = await response.text();
-                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+                const response = await fetch(URI);
+                const data = await response.json();
+                document.getElementById('result').textContent = data.message;
             } catch (error) {
                 document.getElementById('result').textContent = 'Error: ' + error;
             }
         });
+        document.getElementById("uploadForm").addEventListener('submit',async(e)=>{
+            e.preventDefault();
+            const input=document.getElementById("inputFile");
+            const formData= new FormData();
+            formData.append("file",input.files[0]);
+            try{
+                const response=await fetch(`${URI}/upload`,{
+                    method:"POST",
+                    body:formData
+                })
+                const data=await response.json();
+                document.getElementById("uploadResult").textContent=data.message;
+            }catch(err){
+                document.getElementById("uploadResult").textContent = 'Error: ' + error;
+            }
+        })
     </script>
 </body>
 </html>
