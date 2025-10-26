@@ -9,9 +9,9 @@
     <button id="fetchBtn">Fetch Data</button>
     <pre id="result"></pre>
 
-    <form id="uploadForm" method="POST" action="http://localhost:5000/upload" enctype="multipart/form-data">
+    <form id="uploadForm" enctype="multipart/form-data">
         <input id="inputFile" type="file" name="file">
-        <button type="submit">Upload</button>
+        <button type="button" id="uploadBtn">Upload</button>
     </form>
     <pre id="uploadResult"></pre>
 
@@ -26,20 +26,34 @@
                 document.getElementById('result').textContent = 'Error: ' + error;
             }
         });
-        document.getElementById("uploadForm").addEventListener('submit',async(e)=>{
-            e.preventDefault();
+        document.getElementById("uploadBtn").addEventListener('click',async()=>{
             const input=document.getElementById("inputFile");
+            
+            if (!input.files[0]) {
+                document.getElementById("uploadResult").textContent = 'Please select a file first';
+                return;
+            }
+            
             const formData= new FormData();
             formData.append("file",input.files[0]);
+            
+            document.getElementById("uploadResult").textContent = 'Uploading...';
+            
             try{
                 const response=await fetch(`${URI}/upload`,{
                     method:"POST",
                     body:formData
                 })
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data=await response.json();
-                document.getElementById("uploadResult").textContent=data.message;
+                document.getElementById("uploadResult").textContent = data.message;
             }catch(err){
-                document.getElementById("uploadResult").textContent = 'Error: ' + error;
+                console.error('Upload error:', err);
+                document.getElementById("uploadResult").textContent = 'Error: ' + err.message;
             }
         })
     </script>

@@ -33,3 +33,4 @@
 # Ignore package-lock.json and yarn.lock
 **/package-lock.json
 **/yarn.lock
+uploads/
